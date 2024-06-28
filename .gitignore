@@ -1,0 +1,5 @@
+venv/
+__pypache__/
+*.pyc
+*.log
+db.sqlite3
