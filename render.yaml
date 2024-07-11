@@ -1,0 +1,27 @@
+databases:
+  - name: django-test-db
+    plan: free
+    databaseName: django_test_sample
+    user: django_test_sample
+
+services:
+  - type: web
+    name: django-jango-koshitantan
+    env: python
+    plan: free
+    branch: main
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn config.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.6
+      - key: DATABASE_URL
+        fromDatabase:
+          name: django-test-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.production
+      - key: WEB_CONCURRENCY
+        value: 4
