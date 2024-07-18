@@ -13,6 +13,7 @@
     <div class="container">
         <h1>Sample To Do Application</h1>
         <p>You can submit tasks from the following form.</p>
+        
         <form action="{% url 'index' %}" method="post">
             {% csrf_token %}
             <div>
@@ -34,6 +35,15 @@
             <a href="{% url 'index' %}?order=post">Sort by Posted Date</a>
         </div>
 
+        <br>
+        
+        <form action="{% url 'index' %}" method="get">
+            <input type="text" name="query" placeholder="Search tasks...">
+            <button type="submit">Search</button>
+        </form>
+        
+        <br>
+
         {% for task in tasks %}
         <div class="text">
             <h2><a href="{% url 'detail' task.id %}">{{ task.title }}</a></h2>
@@ -52,5 +62,5 @@
         {% endfor %}
     </div>
 </body>
-  
+
 </html>
