@@ -1,53 +1,56 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="ja">
-
-  <head>
-    <title>To Do Application</title>
+  
+<head>
     <meta charset="UTF-8">
     <meta name="author" content="INIAD">
-  </head>
+    <title>To Do Application</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'todo/css/index.css' %}">
+</head>
+  
+<body>
+    <div class="container">
+        <h1>Sample To Do Application</h1>
+        <p>You can submit tasks from the following form.</p>
+        <form action="{% url 'index' %}" method="post">
+            {% csrf_token %}
+            <div>
+                <label for="titleInput">Title</label><br>
+                <input id="titleInput" name="title" type="text" placeholder="Input title">
+            </div>
+            <div>
+                <label for="dueInput">Due at:</label><br>
+                <input id="dueInput" name="due_at" type="datetime-local">
+            </div>
+            <div>
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+        <br>
 
-  <body>
-    <h1>Sample To Do Application</h1>
-    <p>You can submit tasks from the following form.</p>
-    <form action="{% url 'index' %}" method="post">
-      {% csrf_token %}
-      <div>
-        <label for="titleInput">Title</label><br>
-        <input id="titleInput" name="title" type="text" placeholder="Input title">
-      </div>
-      <div>
-        <label for="dueInput">Due at:</label><br>
-        <input id="dueInput" name="due_at" type="datetime-local">
-      </div>
-      <div>
-        <button type="submit">Submit</button>
-      </div>
-    </form>
-    <br>
+        <div class="sort-links">
+            <a href="{% url 'index' %}?order=due">Sort by Due Date</a> |
+            <a href="{% url 'index' %}?order=post">Sort by Posted Date</a>
+        </div>
 
-    <div>
-      <a href="{% url 'index' %}?order=due">Sort by Due Date</a> |
-      <a href="{% url 'index' %}?order=post">Sort by Posted Date</a>
+        {% for task in tasks %}
+        <div class="text">
+            <h2><a href="{% url 'detail' task.id %}">{{ task.title }}</a></h2>
+            <ul>
+                <li>Posted at: {{ task.posted_at }}</li>
+                {% if task.due_at %}
+                <li>Due at: {{ task.due_at }}</li>
+                {% endif %}
+                {% if task.completed %}
+                <li>Status: Completed</li>
+                {% else %}
+                <li>Status: Not Completed</li>
+                {% endif %}
+            </ul>
+        </div>
+        {% endfor %}
     </div>
-
-    {% for task in tasks %}
-    <div class="text">
-      <h2><a href="{% url 'detail' task.id %}">{{ task.title }}</a></h2>
-      <ul>
-        <li>Posted at: {{ task.posted_at }}</li>
-        {% if task.due_at %} 
-        <li>Due at: {{ task.due_at }}</li>
-        {% endif %}
-        {% if task.completed %} 
-        <li>Status: Completed</li>
-        {% else %}
-        <li>Status: Not Completed</li>
-        {% endif %}
-      </ul>
-    </div>
-    {% endfor %}
-  </body>
-
+</body>
+  
 </html>

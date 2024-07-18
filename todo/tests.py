@@ -135,3 +135,24 @@ class DeleteViewTestCase(TestCase):
         response = self.client.get(reverse('delete', args=[self.task.pk]))
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('index'))
+        
+class TaskCloseTest(TestCase):
+
+    def setUp(self):
+        self.task = Task.objects.create(
+            title="Close Test Task",
+            completed=False,
+            posted_at=timezone.now(),
+            due_at=timezone.now() + timezone.timedelta(days=1)
+        )
+
+    def test_close_existing_task(self):
+        response = self.client.post(reverse('close', args=[self.task.id]))
+        self.assertEqual(response.status_code, 302)  
+        self.task.refresh_from_db()  
+        self.assertTrue(self.task.completed)  
+
+    def test_close_nonexistent_task(self):
+        nonexistent_task_id = self.task.id + 1  
+        response = self.client.post(reverse('close', args=[nonexistent_task_id]))
+        self.assertEqual(response.status_code, 404)
