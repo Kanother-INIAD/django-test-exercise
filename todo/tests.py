@@ -115,6 +115,27 @@ class TodoViewTestCase(TestCase):
 
         self.assertEqual(response.status_code, 404)
 
+class DeleteViewTestCase(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.task = Task.objects.create(title='Test Task', due_at=timezone.make_aware(datetime(2024, 7, 1)))
+
+    def test_delete_task_success(self):
+        response = self.client.post(reverse('delete', args=[self.task.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('index'))
+        self.assertFalse(Task.objects.filter(pk=self.task.pk).exists())
+
+    def test_delete_nonexistent_task(self):
+        non_existent_task_id = 999
+        response = self.client.post(reverse('delete', args=[non_existent_task_id]))
+        self.assertEqual(response.status_code, 404)
+
+    def test_delete_task_get_method(self):
+        response = self.client.get(reverse('delete', args=[self.task.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('index'))
+        
 class TaskCloseTest(TestCase):
 
     def setUp(self):
