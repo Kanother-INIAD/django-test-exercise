@@ -1,14 +1,14 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="ja">
-  
+
 <head>
     <meta charset="UTF-8">
     <meta name="author" content="INIAD">
     <title>To Do Application</title>
     <link rel="stylesheet" type="text/css" href="{% static 'todo/css/index.css' %}">
 </head>
-  
+
 <body>
     <div class="container">
         <h1>Sample To Do Application</h1>
@@ -47,10 +47,17 @@
                 {% else %}
                 <li>Status: Not Completed</li>
                 {% endif %}
+                <li>
+                    {% if task.bookmarked %}
+                    <a href="{% url 'bookmark' task.id %}">Unbookmark</a>
+                    {% else %}
+                    <a href="{% url 'bookmark' task.id %}">Bookmark</a>
+                    {% endif %}
+                </li>
             </ul>
         </div>
         {% endfor %}
     </div>
 </body>
-  
+
 </html>
